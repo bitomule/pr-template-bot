@@ -31,12 +31,20 @@ describe('probot-pr-template', () => {
   })
 
   describe('test events', () => {
-    it('when pull requests are opened content is updated', async () => {
-      const payload = fixture('pull_request', './fixtures/pull_request.opened')
+    it('when pull requests are opened and body contains keyword content is updated', async () => {
+      const payload = fixture('pull_request', './fixtures/pull_request.opened.with_keyword')
       // Simulates delivery of a payload
       await robot.receive(payload)
 
       expect(github.pullRequests.update).toHaveBeenCalled()
+    })
+
+    it('when pull requests are opened and body does not contain keyword content not updated', async () => {
+      const payload = fixture('pull_request', './fixtures/pull_request.opened')
+      // Simulates delivery of a payload
+      await robot.receive(payload)
+
+      expect(github.pullRequests.update).not.toHaveBeenCalled()
     })
   })
 })
@@ -49,5 +57,6 @@ describe('trigger', () => {
 
   it('it should return false if PR description contains any other thing', async () => {
     expect(shouldReplace('bla')).toBeFalsy()
+    expect(shouldReplace('')).toBeFalsy()
   })
 })
