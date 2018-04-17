@@ -40,3 +40,14 @@ describe('probot-pr-template', () => {
     })
   })
 })
+
+describe('trigger', () => {
+  const shouldReplace = require('../lib/shouldReplace')
+  it('it should return true if PR description contains only /template', async () => {
+    expect(shouldReplace('/template')).toBeTruthy()
+  })
+
+  it('it should return false if PR description contains any other thing', async () => {
+    expect(shouldReplace('bla')).toBeFalsy()
+  })
+})
